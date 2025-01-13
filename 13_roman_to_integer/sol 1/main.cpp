@@ -28,14 +28,24 @@ private:
 
     int subtraction(char current, char previous, int &num) {
 
-        if(current == 'I' && (previous == 'V' || previous == 'X'))
-            return -1;
-        else if(current == 'X' && (previous == 'L' || previous == 'C'))
-            return -10;
-        else if(current == 'C' && (previous == 'D' || previous == 'M'))
-            return -100;
-        else
-            return roman_numerals.at(current);
+        switch(current) {
+
+            case 'I':
+                if(previous == 'V' || previous == 'X')
+                    return -1;
+
+            case 'X':
+                if(previous == 'L' || previous == 'C')
+                    return -10;
+
+            case 'C':
+                if(previous == 'D' || previous == 'M')
+                     return -100;
+
+            default:
+                return roman_numerals.at(current);
+
+        }
 
     }
 
@@ -44,34 +54,21 @@ public:
     int romanToInt(string &s){
 
         int decimal_val = 0;
-        const int end = s.length() - 1;
-        char current, previous;
-        current = previous = s[end];
+        char current = *s.rbegin(), previous = *s.rbegin();
 
         decimal_val += roman_numerals.at(current);
 
-        for(int i = end - 1; i >= 0; --i) {
+        for(auto rit = s.rbegin() + 1; rit != s.rend(); ++rit) {
 
-            current = s[i];
+            current = *rit;
             decimal_val += subtraction(current, previous, decimal_val);
 
             previous = current;
             
         }
 
-        std::cout << decimal_val << '\n';
-
         return decimal_val;
 
     }
 
 };
-
-int main(void) {
-
-    Solution sol;
-    string roman_numeral = "MMCDXLIV";
-
-    sol.romanToInt(roman_numeral);
-
-}
